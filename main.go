@@ -1,15 +1,17 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
-	"github.com/shirou/gopsutil/v4/cpu"
-	"github.com/shirou/gopsutil/v4/mem"
 )
 
 type TelemetryResponse struct {
@@ -33,6 +35,57 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+func getCpuFreq() int {
+	file, err := os.Open("/proc/cpuinfo")
+	if err != nil {
+		return 0
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "cpu MHz") {
+			parts := strings.Split(line, ":")
+			if len(parts) < 2 {
+				continue
+			}
+			valStr := strings.TrimSpace(parts[1])
+			freq, err := strconv.ParseFloat(valStr, 64)
+			if err != nil {
+				return 0
+			}
+			return int(freq)
+		}
+	}
+	return 0
+}
+
+func getRamMB() int {
+	file, err := os.Open("/proc/meminfo")
+	if err != nil {
+		return 0
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "MemTotal:") {
+			fields := strings.Fields(line)
+			if len(fields) < 2 {
+				continue
+			}
+			kbVal, err := strconv.Atoi(fields[1])
+			if err != nil {
+				return 0
+			}
+			return kbVal / 1024 // КБ -> МБ
+		}
+	}
+	return 0
+}
+
 func telemetryWebSocket(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -43,12 +96,12 @@ func telemetryWebSocket(w http.ResponseWriter, r *http.Request) {
 	for {
 		mt, _, _ := conn.ReadMessage()
 
-		infoCpu, _ := cpu.Info()
-		infoMem, _ := mem.VirtualMemory()
+		infoCpu := getCpuFreq()
+		infoMem := getRamMB()
 
 		resp := TelemetryResponse{
-			CpuFreq: int(infoCpu[0].Mhz),                // Mhz
-			Ram:     int(infoMem.Total / (1024 * 1024)), // Mb
+			CpuFreq: infoCpu, // Mhz
+			Ram:     infoMem, // Mb
 		}
 
 		respBytes, _ := json.Marshal(resp)
