@@ -8,14 +8,14 @@
     <body>
         <main>
             <div id="telemetryBlock">
-                <h2>Текущие параметры сервера</h2>
+                <h2>Текущие параметры сервера <span class="status error" id="telemetryStatus">отключено</span></h2>
                 <div class="content">
                     <span>Тактовая частота: <span id="cpuFreq">ждём ответ</span></span>
                     <span>Объем оперативной памяти: <span id="ram">ждём ответ</span></span>
                 </div>
             </div>
             <div id="echoBlock">
-                <h2>Отправка текста на сервер <span id="echoStatus">отключено</span></h2>
+                <h2>Отправка текста на сервер <span class="status error" id="echoStatus">отключено</span></h2>
                 <div class="content">
                     <span>
                         <input id="echoInput" type="text" placeholder="Введите текст"/>

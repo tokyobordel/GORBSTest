@@ -33,17 +33,29 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func telemetryHandler(w http.ResponseWriter, r *http.Request) {
-	infoCpu, _ := cpu.Info()
-	infoMem, _ := mem.VirtualMemory()
-
-	resp := TelemetryResponse{
-		CpuFreq: int(infoCpu[0].Mhz),                // Mhz
-		Ram:     int(infoMem.Total / (1024 * 1024)), // Mb
+func telemetryWebSocket(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		return
 	}
+	defer conn.Close()
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(resp)
+	for {
+		mt, _, _ := conn.ReadMessage()
+
+		infoCpu, _ := cpu.Info()
+		infoMem, _ := mem.VirtualMemory()
+
+		resp := TelemetryResponse{
+			CpuFreq: int(infoCpu[0].Mhz),                // Mhz
+			Ram:     int(infoMem.Total / (1024 * 1024)), // Mb
+		}
+
+		respBytes, _ := json.Marshal(resp)
+
+		conn.WriteMessage(mt, respBytes)
+
+	}
 }
 
 func echoWebSocket(w http.ResponseWriter, r *http.Request) {
@@ -74,7 +86,7 @@ func echoWebSocket(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/telemetry", telemetryHandler).Methods("GET")
+	r.HandleFunc("/telemetry", telemetryWebSocket).Methods("GET")
 	r.HandleFunc("/echo", echoWebSocket).Methods("GET")
 
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
