@@ -1,80 +1,72 @@
 // Элементы для взаимодействия с веб-сокетами
-// Телеметрия
-const telemetryWebSocket = new WebSocket('ws://localhost:8080/telemetry');
-const cpuFreqBlock = document.getElementById("cpuFreq");
-const telemetryStatusSpan = document.getElementById("telemetryStatus");
-const ramBlock = document.getElementById("ram");
-// Эхо
-const echoWebSocket = new WebSocket('ws://localhost:8080/echo');
-const echoStatusSpan = document.getElementById("echoStatus");
-const echoInputField = document.getElementById("echoInput");
-const echoSubmitBtn = document.getElementById("echoSubmit");
-const echoResponseBlock = document.getElementById("echoResponse");
+// Отправка сообщения
+const chatWebSocket = new WebSocket('ws://localhost:8080/chat');
+const chatTextarea = document.getElementById("chatTextarea")
+const chatSendBtn = document.getElementById("chatSend")
+
+// Выгрузка истории чата
+const chatHistoryWebSocket = new WebSocket('ws://localhost:8080/chat_history');
+const chatHistoryBlock = document.getElementById("chatHistory")
 
 // Вспомогательные функции
-function setEchoWebSocketStatus(isConnected) {
-    echoStatusSpan.classList.remove("open");
-    echoStatusSpan.classList.remove("error");
-    echoStatusSpan.classList.add(isConnected ? "open" : "error");
+function addMessage(message) {
+    let html = "<div class='message' id='msg_" + message.id + "'>";
+    html += "<div class='content'>" + message.content + "</div>"
+    html += "<div class='createdAt'>" + message.created_at + "</div>"
+    html += "</div>";
+    chatHistoryBlock.insertAdjacentHTML('beforeend', html);
+
+    document.getElementById("msg_" + message.id).scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
-function setTelemetryWebSocketStatus(isConnected) {
-    telemetryStatusSpan.classList.remove("open");
-    telemetryStatusSpan.classList.remove("error");
-    telemetryStatusSpan.classList.add(isConnected ? "open" : "error");
-}
-
-function setTelemetryWebSocketError() {
-    cpuFreqBlock.innerHTML = "ошибка"
-    ramBlock.innerHTML = "ошибка"
+function displayMessages(data) {
+    const messages = JSON.parse(data);
+    chatHistoryBlock.innerHTML = null;
+    if(messages) {
+        for (const message of messages) {
+            addMessage(message)
+        }
+    }
 }
 
 // Инит вебсокетов
-// telemetry
-telemetryWebSocket.onopen = () => {
-    setTelemetryWebSocketStatus(true);
-    setInterval(async () => {
-        if (telemetryWebSocket.readyState !== WebSocket.OPEN) {
-            setTelemetryWebSocketStatus(false)
-            return;
-        }
-        telemetryWebSocket.send('ping')
-    }, 1000)
+// chat
+chatWebSocket.onopen = () => {
+
 }
-telemetryWebSocket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    cpuFreqBlock.innerHTML = data.cpu_freq + " МГц"
-    ramBlock.innerHTML = data.ram + " Мб"
+chatWebSocket.onmessage = (event) => {
+    displayMessages(event.data)
 };
-telemetryWebSocket.onclose = () => {
-    setTelemetryWebSocketStatus(false)
+chatWebSocket.onclose = () => {
+
 }
-telemetryWebSocket.onerror = () => {
-    setTelemetryWebSocketError()
+chatWebSocket.onerror = () => {
+
 }
 
-// echo
-echoWebSocket.onopen = () => {
-    setEchoWebSocketStatus(true)
+// chat_history
+chatHistoryWebSocket.onopen = () => {
+    chatHistoryWebSocket.send("ping")
 }
-echoWebSocket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    echoResponseBlock.innerHTML = data.text + ", " + data.timestamp;
+chatHistoryWebSocket.onmessage = (event) => {
+    displayMessages(event.data)
 };
-echoWebSocket.onclose = () => {
-    setEchoWebSocketStatus(false)
+chatHistoryWebSocket.onclose = () => {
+
 }
-echoWebSocket.onerror = () => {
+chatHistoryWebSocket.onerror = () => {
 
 }
 
 // Обработчик нажатия на кнопку отправки сообщения
-echoSubmitBtn.addEventListener('click', async () => {
-    if (echoWebSocket.readyState !== WebSocket.OPEN) {
-        setEchoWebSocketStatus(false);
+chatSendBtn.addEventListener('click', async () => {
+    if(chatWebSocket.readyState !== WebSocket.OPEN) {
         return;
     }
 
-    const payload = JSON.stringify({text: echoInputField.value});
-    echoWebSocket.send(payload)
+    const payload = JSON.stringify({content: chatTextarea.value});
+    chatWebSocket.send(payload)
 });

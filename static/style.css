@@ -11,17 +11,18 @@ html, body, #wrapper {
 #wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    overflow-y: auto;
     height: 100dvh;
-    min-height: 0;
+    overflow: hidden;
 }
 
 main {
+    flex: 1;
+    overflow-y: auto;
     display: flex;
-    flex-flow: column wrap;
-    align-content: space-around;
-    justify-content: center;
+    flex-direction: column;
+    min-height: 0;
+    width: 50%;
+    margin: 0 auto;
 }
 
 main > div {
@@ -31,26 +32,6 @@ main > div {
 .content {
     display: flex;
     flex-flow: column wrap;
-}
-
-.status.open {
-    background: green;
-}
-
-.status.error {
-    background: red;
-}
-
-.status {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
-    margin-left: 10px;
 }
 
 header, footer {
@@ -68,4 +49,85 @@ footer {
 
 header h1 {
     color: black;
+}
+
+.message {
+    background: #00c890;
+    margin: 5px;
+    padding: 10px;
+}
+
+.createdAt {
+    text-align: right;
+    font-style: italic;
+    font-size: 10pt;
+}
+
+/* ---- Панель ввода ---- */
+#chatTools {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border-top: 1px solid rgba(0, 200, 144, 0.3);
+    box-sizing: border-box;
+    width: 50%;
+    margin: 0 auto;
+}
+
+#chatTextarea {
+    flex: 1 1 auto;
+    padding: 10px 14px;
+    border: 1px solid #c0e8da;
+    outline: none;
+    background: #f5fdf9;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+#chatTextarea:focus {
+    border-color: #00c890;
+    box-shadow: 0 0 0 3px rgba(0, 200, 144, 0.15);
+}
+
+#chatSend {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: #00c890;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 200, 144, 0.25);
+    line-height: 1;
+}
+
+#chatSend:hover {
+    background: #00a676;
+    box-shadow: 0 4px 10px rgba(0, 200, 144, 0.35);
+}
+
+#chatSend:active {
+    transform: scale(0.94);
+    background: #008f5e;
+}
+
+@media screen and (max-width: 1336px) {
+    main {
+        width: 100%;
+    }
+
+    #chatTools {
+        width: 100%;
+    }
 }

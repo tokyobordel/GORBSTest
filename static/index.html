@@ -3,34 +3,20 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="style.css"/>
-        <title>Мониторинг текущей машины</title>
+        <title>Чоткий чатик</title>
     </head>
     <body>
         <div id="wrapper">
             <header>
-                <h1>Монитор ресурсов</h1>
-                <span class="status error" id="telemetryStatus">T</span>
-                <span class="status error" id="echoStatus">E</span>
+                <h1>Чоткий чатик</h1>
             </header>
             <main>
-                <div id="telemetryBlock">
-                    <h2>Текущие параметры сервера</h2>
-                    <div class="content">
-                        <span>Тактовая частота: <span id="cpuFreq">ждём ответ</span></span>
-                        <span>Объем оперативной памяти: <span id="ram">ждём ответ</span></span>
-                    </div>
-                </div>
-                <div id="echoBlock">
-                    <h2>Отправка текста на сервер</h2>
-                    <div class="content">
-                        <span>
-                            <input id="echoInput" type="text" placeholder="Введите текст"/>
-                            <button id="echoSubmit">GO</button>
-                        </span>
-                        <span id="echoResponse"></span>
-                    </div>
-                </div>
+                <div id="chatHistory"></div>
             </main>
+            <div id="chatTools">
+                <textarea id="chatTextarea"></textarea>
+                <button id="chatSend">GO</button>
+            </div>
             <footer>Очень важная инфа &copy;</footer>
         </div>
         <script src="index.js"></script>
