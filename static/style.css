@@ -3,9 +3,18 @@
     padding: 0;
 }
 
-html, body, main {
+html, body, #wrapper {
     width: 100dvw;
     height: 100dvh;
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    height: 100dvh;
+    min-height: 0;
 }
 
 main {
@@ -25,13 +34,38 @@ main > div {
 }
 
 .status.open {
-    color: green;
+    background: green;
 }
 
 .status.error {
-    color: red;
+    background: red;
 }
 
 .status {
-    font-size: 11pt;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+header, footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: #00c890;
+}
+
+footer {
+    background: #00c89091;
+}
+
+header h1 {
+    color: black;
 }

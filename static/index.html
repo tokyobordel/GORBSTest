@@ -6,25 +6,33 @@
         <title>Мониторинг текущей машины</title>
     </head>
     <body>
-        <main>
-            <div id="telemetryBlock">
-                <h2>Текущие параметры сервера <span class="status error" id="telemetryStatus">отключено</span></h2>
-                <div class="content">
-                    <span>Тактовая частота: <span id="cpuFreq">ждём ответ</span></span>
-                    <span>Объем оперативной памяти: <span id="ram">ждём ответ</span></span>
+        <div id="wrapper">
+            <header>
+                <h1>Монитор ресурсов</h1>
+                <span class="status error" id="telemetryStatus">T</span>
+                <span class="status error" id="echoStatus">E</span>
+            </header>
+            <main>
+                <div id="telemetryBlock">
+                    <h2>Текущие параметры сервера</h2>
+                    <div class="content">
+                        <span>Тактовая частота: <span id="cpuFreq">ждём ответ</span></span>
+                        <span>Объем оперативной памяти: <span id="ram">ждём ответ</span></span>
+                    </div>
                 </div>
-            </div>
-            <div id="echoBlock">
-                <h2>Отправка текста на сервер <span class="status error" id="echoStatus">отключено</span></h2>
-                <div class="content">
-                    <span>
-                        <input id="echoInput" type="text" placeholder="Введите текст"/>
-                        <button id="echoSubmit">GO</button>
-                    </span>
-                    <span id="echoResponse"></span>
+                <div id="echoBlock">
+                    <h2>Отправка текста на сервер</h2>
+                    <div class="content">
+                        <span>
+                            <input id="echoInput" type="text" placeholder="Введите текст"/>
+                            <button id="echoSubmit">GO</button>
+                        </span>
+                        <span id="echoResponse"></span>
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+            <footer>Очень важная инфа &copy;</footer>
+        </div>
         <script src="index.js"></script>
     </body>
 </html>

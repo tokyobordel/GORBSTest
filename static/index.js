@@ -13,21 +13,15 @@ const echoResponseBlock = document.getElementById("echoResponse");
 
 // Вспомогательные функции
 function setEchoWebSocketStatus(isConnected) {
-    echoStatusSpan.innerHTML = isConnected ? "подключено" : "отключено";
     echoStatusSpan.classList.remove("open");
     echoStatusSpan.classList.remove("error");
     echoStatusSpan.classList.add(isConnected ? "open" : "error");
 }
 
 function setTelemetryWebSocketStatus(isConnected) {
-    telemetryStatusSpan.innerHTML = isConnected ? "подключено" : "отключено";
     telemetryStatusSpan.classList.remove("open");
     telemetryStatusSpan.classList.remove("error");
     telemetryStatusSpan.classList.add(isConnected ? "open" : "error");
-}
-
-function setEchoWebSocketError() {
-    echoStatusSpan.innerHTML = "ошибка"
 }
 
 function setTelemetryWebSocketError() {
@@ -49,8 +43,8 @@ telemetryWebSocket.onopen = () => {
 }
 telemetryWebSocket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    cpuFreqBlock.innerHTML = data.cpu_freq
-    ramBlock.innerHTML = data.ram
+    cpuFreqBlock.innerHTML = data.cpu_freq + " МГц"
+    ramBlock.innerHTML = data.ram + " Мб"
 };
 telemetryWebSocket.onclose = () => {
     setTelemetryWebSocketStatus(false)
@@ -71,7 +65,7 @@ echoWebSocket.onclose = () => {
     setEchoWebSocketStatus(false)
 }
 echoWebSocket.onerror = () => {
-    setEchoWebSocketError()
+
 }
 
 // Обработчик нажатия на кнопку отправки сообщения
