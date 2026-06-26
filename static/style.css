@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body, main {
+    width: 100dvw;
+    height: 100dvh;
+}
+
+main {
+    display: flex;
+    flex-flow: column wrap;
+    align-content: space-around;
+    justify-content: center;
+    padding: 10px;
+}
+
+.content {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+#echoStatus {
+    font-size: 11pt;
+}

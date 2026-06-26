@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css"/>
+        <title>Мониторинг текущей машины</title>
+    </head>
+    <body>
+        <main>
+            <div id="telemetryBlock">
+                <h2>Текущие параметры сервера</h2>
+                <div class="content">
+                    <span>Тактовая частота: <span id="cpuFreq">ждём ответ</span></span>
+                    <span>Объем оперативной памяти: <span id="ram">ждём ответ</span></span>
+                </div>
+            </div>
+            <div id="echoBlock">
+                <h2>Отправка текста на сервер <span id="echoStatus">отключено</span></h2>
+                <div class="content">
+                    <span>
+                        <input id="echoInput" type="text" placeholder="Введите текст"/>
+                        <button id="echoSubmit">GO</button>
+                    </span>
+                    <span id="echoResponse"></span>
+                </div>
+            </div>
+        </main>
+        <script src="index.js"></script>
+    </body>
+</html>
