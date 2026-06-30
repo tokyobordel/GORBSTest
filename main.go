@@ -20,25 +20,25 @@ func main() {
 
 	app.Static("/", "./static")
 
-	// GET /loadMainFeed – загрузка всей отсортированной ленты
+	// загрузка всей отсортированной ленты
 	app.Get("/loadMainFeed", endpointHandlers.LoadMainFeedHandler)
 
-	// GET /loadUserFeed – загрузка отсортированной ленты пользователя
+	// загрузка отсортированной ленты пользователя
 	app.Get("/loadUserFeed/:userID", endpointHandlers.LoadUserFeedHandler)
 
-	// POST /signin – вход
+	// вход
 	app.Post("/signin", endpointHandlers.SigninHandler)
 
-	// POST /signup – регистрация
+	// регистрация
 	app.Post("/signup", endpointHandlers.SignupHandler)
 
-	// POST /refresh – обновление токена
+	// обновление токена
 	app.Post("/refresh", endpointHandlers.RefreshHandler)
 
-	// POST /logout – удаление токена у пользователя
+	// удаление токена у пользователя
 	app.Post("/logout", endpointHandlers.LogoutHandler)
 
-	// POST /upload – загрузка изображений
+	// загрузка изображений
 	app.Post("/upload", endpointHandlers.UploadHandler)
 	
 	app.Listen(utils.GetEnv("APP_HOST", ":3000"))
